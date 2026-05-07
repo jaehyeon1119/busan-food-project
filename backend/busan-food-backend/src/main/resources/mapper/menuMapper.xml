@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.food.mapper.MenuMapper">
+
+    <select id="findByRestaurantId" parameterType="int" resultType="MenuDto">
+        SELECT
+            menu_id,
+            restaurant_id,
+            menu_name,
+            price,
+            menu_image,
+            is_main
+        FROM menus
+        WHERE restaurant_id = #{restaurantId}
+        ORDER BY is_main DESC, menu_id ASC
+    </select>
+
+</mapper>

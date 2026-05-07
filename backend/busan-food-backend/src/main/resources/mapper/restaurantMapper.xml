@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.food.mapper.RestaurantMapper">
+
+    <select id="findAll" resultType="com.project.food.dto.RestaurantDto">
+        SELECT
+            r.restaurant_id AS restaurantId,
+            r.name,
+            r.category,
+            r.address,
+            r.region,
+            r.main_menu AS mainMenu,
+            r.main_image AS mainImage,
+
+            COALESCE(ROUND(AVG(rv.rating), 1), 0) AS rating,
+            COUNT(rv.review_id) AS reviewCount,
+
+            r.lat,
+            r.lng,
+            r.tel,
+            r.open_time AS openTime,
+            r.homepage,
+            r.description
+        FROM restaurants r
+        LEFT JOIN reviews rv
+            ON r.restaurant_id = rv.restaurant_id
+        GROUP BY
+            r.restaurant_id,
+            r.name,
+            r.category,
+            r.address,
+            r.region,
+            r.main_menu,
+            r.main_image,
+            r.lat,
+            r.lng,
+            r.tel,
+            r.open_time,
+            r.homepage,
+            r.description
+        ORDER BY r.restaurant_id DESC
+    </select>
+
+    <select id="findById" parameterType="int" resultType="com.project.food.dto.RestaurantDto">
+        SELECT
+            r.restaurant_id AS restaurantId,
+            r.name,
+            r.category,
+            r.address,
+            r.region,
+            r.main_menu AS mainMenu,
+            r.main_image AS mainImage,
+
+            COALESCE(ROUND(AVG(rv.rating), 1), 0) AS rating,
+            COUNT(rv.review_id) AS reviewCount,
+
+            r.lat,
+            r.lng,
+            r.tel,
+            r.open_time AS openTime,
+            r.homepage,
+            r.description
+        FROM restaurants r
+        LEFT JOIN reviews rv
+            ON r.restaurant_id = rv.restaurant_id
+        WHERE r.restaurant_id = #{restaurantId}
+        GROUP BY
+            r.restaurant_id,
+            r.name,
+            r.category,
+            r.address,
+            r.region,
+            r.main_menu,
+            r.main_image,
+            r.lat,
+            r.lng,
+            r.tel,
+            r.open_time,
+            r.homepage,
+            r.description
+    </select>
+
+    <insert id="insertRestaurant" parameterType="com.project.food.dto.RestaurantDto">
+        INSERT INTO restaurants (
+            name,
+            category,
+            address,
+            region,
+            main_menu,
+            main_image,
+            rating,
+            review_count,
+            lat,
+            lng,
+            tel,
+            open_time,
+            homepage,
+            description
+        ) VALUES (
+            #{name},
+            #{category},
+            #{address},
+            #{region},
+            #{mainMenu},
+            #{mainImage},
+            #{rating},
+            #{reviewCount},
+            #{lat},
+            #{lng},
+            #{tel},
+            #{openTime},
+            #{homepage},
+            #{description}
+        )
+    </insert>
+
+    <delete id="deleteAllRestaurants">
+        DELETE FROM restaurants
+    </delete>
+
+    <select id="getReviewStats" parameterType="int" resultType="map">
+        SELECT
+            COUNT(*) AS reviewCount,
+            COALESCE(ROUND(AVG(rating), 1), 0) AS avgRating
+        FROM reviews
+        WHERE restaurant_id = #{restaurantId}
+    </select>
+
+</mapper>

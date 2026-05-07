@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.food.mapper.MemberMapper">
+
+    <insert id="insertMember" parameterType="MemberDto">
+        INSERT INTO members (
+            login_id,
+            password,
+            name,
+            phone
+        ) VALUES (
+            #{loginId},
+            #{password},
+            #{name},
+            #{phone}
+        )
+    </insert>
+
+    <select id="login" parameterType="MemberDto" resultType="MemberDto">
+        SELECT
+            member_id,
+            login_id,
+            password,
+            name,
+            phone,
+            created_at
+        FROM members
+        WHERE login_id = #{loginId}
+          AND password = #{password}
+    </select>
+
+    <select id="findById" parameterType="int" resultType="MemberDto">
+        SELECT
+            member_id,
+            login_id,
+            password,
+            name,
+            phone,
+            created_at
+        FROM members
+        WHERE member_id = #{memberId}
+    </select>
+
+</mapper>
